@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from todoapp_fastapi import settings
-from sqlmodel import SQLModel , Field, Session , create_engine
+from sqlmodel import SQLModel , Field, Session , create_engine, select
 from contextlib import asynccontextmanager
 
 class Todo(SQLModel , table=True):
@@ -48,13 +48,26 @@ def read_root():
 def db():
     return {
         "DB" : settings.DATABASE_URL ,
-        "Connection" : connection_str
-        
+        "Connection" : connection_str,
     }
 @app.post("/todo")
-def create_todo(todo_data:Todo):
+def create_todo(try_content:Todo):
     with Session(engine) as session:
-        session.add(todo_data)
+        #session = Session(engine)
+        session.add(try_content)
         session.commit()
-        session.refresh(todo_data)
-        return todo_data
+        session.refresh(try_content)
+        #session.close()
+        return try_content
+
+#dependency injection
+
+#get all Todos Data
+@app.get("/todos")
+def get_all_todos():
+    with Session(engine) as session:
+    #session = Session(engine)
+    # Todos Select
+      query = select(Todo)
+      all_todos = session.exec(query).all()
+      return all_todos
