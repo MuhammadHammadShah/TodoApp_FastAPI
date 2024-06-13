@@ -21,3 +21,12 @@ poetry add fastapi
 install uvicorn
 
 poetry add uvicorn
+
+
+If an error comes of used port use this command
+
+`poetry run uvicorn todoapp_fastapi.main:app --host 127.0.0.1 --port 8002 --reload`
+
+instead of
+
+`poetry run uvicorn todoapp_fastapi.main:app --reload`
